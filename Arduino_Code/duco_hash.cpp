@@ -2,7 +2,7 @@
 
 #pragma GCC optimize ("-Ofast")
 
-//#define sha1_rotl(bits,word)     (((word) << (bits)) | ((word) >> (32 - (bits))))
+#define sha1_rotl(bits,word)     (((word) << (bits)) | ((word) >> (32 - (bits))))
 
 void duco_hash_block(duco_hash_state_t * hasher) {
 	// NOTE: keeping this static improves performance quite a lot
@@ -23,7 +23,7 @@ void duco_hash_block(duco_hash_state_t * hasher) {
 
 	for (uint8_t i = 10; i < 80; i++) {
 		if (i >= 16) {
-			w[i & 15] = sha1_rotl1(w[(i-3) & 15] ^ w[(i-8) & 15] ^ w[(i-14) & 15] ^ w[(i-16) & 15]);
+			w[i & 15] = sha1_rotl(1,w[(i-3) & 15] ^ w[(i-8) & 15] ^ w[(i-14) & 15] ^ w[(i-16) & 15]);
 		}
 
 		uint32_t temp = sha1_rotl5(a) + e + w[i & 15];

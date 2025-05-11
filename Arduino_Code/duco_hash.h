@@ -18,7 +18,6 @@ struct duco_hash_state_t {
 extern "C" {
 #endif
 // Declare external assembly functions
-extern uint32_t sha1_rotl1(uint32_t val);
 extern uint32_t sha1_rotl5(uint32_t val);
 extern uint32_t sha1_rotl30(uint32_t val);
 #ifdef __cplusplus

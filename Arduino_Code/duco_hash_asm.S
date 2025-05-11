@@ -1,24 +1,5 @@
-.global sha1_rotl1
 .global sha1_rotl5
 .global sha1_rotl30
-
-; uint32_t sha1_rotl1(uint32_t val)
-; Input: 
-;   - x value in r25:r22 (little-endian: r22 is LSB, r25 is MSB)
-; Output:
-;   - w result in r25:r22
-sha1_rotl1:
-    ; Rotate entire 32-bit value left by 1
-    lsl r22         ; Shift LSB, MSB to carry
-    rol r23         ; Rotate next byte through carry
-    rol r24         ; Rotate next byte through carry
-    rol r25         ; Rotate MSB through carry
-    
-    ; Handle wrap-around bit
-    brcc no_carry_32
-    ori r22, 0x01   ; Set LSB if carry was set
-no_carry_32:
-    ret
 
 ; Input: 
 ;   - a value in r25:r22 (little-endian: r22 is LSB, r25 is MSB)
