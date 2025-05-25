@@ -186,6 +186,8 @@ Please note the DUCO/day column has been removed since version 4.0 changed the r
 
 ### Please note that these softwares are not developed by us and we do not give any guarantees that use of them will not result in an account getting banned if they get changed in the future.
 
+#### It is worth noting that using [nonceMiner](https://github.com/colonelwatch/nonceMiner) from Colonelwatch **will get you banned**.
+
   ### Miners made by the Duino-Coin community:
   *   [Dockerized Duino-Coin Miner](https://github.com/simeononsecurity/docker-duino-coin) - A Dockerized version of the Duino-Coin Miner by simeononsecurity
   *   :point_right: [**RP2040-HAT-MINING-C**](https://github.com/Wiznet/RP2040-HAT-MINING-C) - **WIZnet RP2040 mining stack**
