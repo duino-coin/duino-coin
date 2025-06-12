@@ -193,9 +193,6 @@ extern unsigned int ping = 0;
     // Install "lilygo lib TFT_eSPI.h" if you get an error
       #include "esp_sntp.h"
       #include <TFT_eSPI.h>
-      #include <SPI.h>
-      #include <Wire.h>
-
       
     // Display definition from the tft_eSPI library. Edit if you use a different display
       TFT_eSPI tft = TFT_eSPI();  // Invoke library, pins defined in User_Setup.h
