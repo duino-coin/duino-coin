@@ -520,6 +520,44 @@ MiningJob *job[CORE];
   EasyFreeRTOS32 task1, task2;
 #endif
 
+void showMiningStatsOnDisplay(){
+  #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_2432S08)
+      float hashrate_float = (hashrate+hashrate_core_two) / 1000.0;
+      float accept_rate = (accepted_share_count / 0.01 / share_count);
+      
+      long millisecs = millis();
+      int uptime_secs = int((millisecs / 1000) % 60);
+      int uptime_mins = int((millisecs / (1000 * 60)) % 60);
+      int uptime_hours = int((millisecs / (1000 * 60 * 60)) % 24);
+      String uptime = String(uptime_hours) + "h" + String(uptime_mins) + "m" + String(uptime_secs) + "s";
+      
+      float sharerate = share_count / (millisecs / 1000.0);
+
+      #if defined(DISPLAY_2432S08)
+
+        while(displayLock) {
+          handleSystemEvents();
+        }
+          displayLock = true;
+          
+        display_mining_results(String(hashrate_float, 1), String(accepted_share_count), String(share_count), String(uptime), 
+                              String(node_id), String(difficulty / 100), String(sharerate, 2),
+                              String(ping), String(accept_rate, 1));
+
+        display_balance(String(result_balance_balance),String(total_miner),String(result_balance_username));
+        
+        display_time(String(mytime));
+        
+        displayLock = false;
+
+      #else
+        display_mining_results(String(hashrate_float, 1), String(accepted_share_count), String(share_count), String(uptime), 
+                              String(node_id), String(difficulty / 100), String(sharerate, 1),
+                              String(ping), String(accept_rate, 1));
+      #endif
+  #endif
+}
+
 void task1_func(void *) {
     #if defined(ESP32) && CORE == 2
       VOID SETUP() { }
@@ -527,35 +565,7 @@ void task1_func(void *) {
       VOID LOOP() {
         job[0]->mine();
 
-        #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_2432S08)
-           float hashrate_float = (hashrate+hashrate_core_two) / 1000.0;
-           float accept_rate = (accepted_share_count / 0.01 / share_count);
-           
-           long millisecs = millis();
-           int uptime_secs = int((millisecs / 1000) % 60);
-           int uptime_mins = int((millisecs / (1000 * 60)) % 60);
-           int uptime_hours = int((millisecs / (1000 * 60 * 60)) % 24);
-           String uptime = String(uptime_hours) + "h" + String(uptime_mins) + "m" + String(uptime_secs) + "s";
-           
-           float sharerate = share_count / (millisecs / 1000.0);
-           
-           while(displayLock) {
-             handleSystemEvents();
-           }
-            
-            displayLock = true;
-          
-           display_mining_results(String(hashrate_float, 1), String(accepted_share_count), String(share_count), String(uptime), 
-                                  String(node_id), String(difficulty / 100), String(sharerate, 1),
-                                  String(ping), String(accept_rate, 1));
-
-                                  
-            display_balance(String(result_balance_balance),String(total_miner),String(result_balance_username));
-            
-            display_time(String(mytime));
-                                  
-            displayLock = false; 
-        #endif
+        showMiningStatsOnDisplay();
       }
     #endif
 }
@@ -569,35 +579,9 @@ void task2_func(void *) {
       VOID LOOP() {
         job[1]->mine();
 
-        #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_2432S08)
-           float hashrate_float = (hashrate+hashrate_core_two) / 1000.0;
-           float accept_rate = (accepted_share_count / 0.01 / share_count);
-           
-           long millisecs = millis();
-           int uptime_secs = int((millisecs / 1000) % 60);
-           int uptime_mins = int((millisecs / (1000 * 60)) % 60);
-           int uptime_hours = int((millisecs / (1000 * 60 * 60)) % 24);
-           String uptime = String(uptime_hours) + "h" + String(uptime_mins) + "m" + String(uptime_secs) + "s";
-           
-           float sharerate = share_count / (millisecs / 1000.0);
+        updateTimeDisplayData();
 
-           printTime();
-    
-           while(displayLock) {
-             handleSystemEvents();
-           }
-             displayLock = true;
-             
-           display_mining_results(String(hashrate_float, 1), String(accepted_share_count), String(share_count), String(uptime), 
-                                  String(node_id), String(difficulty / 100), String(sharerate, 2),
-                                  String(ping), String(accept_rate, 1));
-
-           display_balance(String(result_balance_balance),String(total_miner),String(result_balance_username));
-           
-           display_time(String(mytime));
-           
-          displayLock = false;
-        #endif
+        showMiningStatsOnDisplay();
       }
     #endif
 }
@@ -624,7 +608,7 @@ void setTimezone() {
   tzset();
 }
 
-void printTime() {
+void updateTimeDisplayData() {
   struct tm timeinfo;
   getLocalTime(&timeinfo);
   #if defined(SERIAL_PRINTING)
@@ -885,22 +869,7 @@ void single_core_loop() {
     
     lwdtFeed();
     
-    #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2)
-       float hashrate_float = (hashrate+hashrate_core_two) / 1000.0;
-       float accept_rate = (accepted_share_count / 0.01 / share_count);
-       
-       long millisecs = millis();
-       int uptime_secs = int((millisecs / 1000) % 60);
-       int uptime_mins = int((millisecs / (1000 * 60)) % 60);
-       int uptime_hours = int((millisecs / (1000 * 60 * 60)) % 24);
-       String uptime = String(uptime_hours) + "h" + String(uptime_mins) + "m" + String(uptime_secs) + "s";
-       
-       float sharerate = share_count / (millisecs / 1000.0);
-
-       display_mining_results(String(hashrate_float, 1), String(accepted_share_count), String(share_count), String(uptime), 
-                              String(node_id), String(difficulty / 100), String(sharerate, 1),
-                              String(ping), String(accept_rate, 1));
-    #endif
+    showMiningStatsOnDisplay();
 
     VerifyWifi();
     ArduinoOTA.handle();
@@ -951,12 +920,6 @@ void loop() {
               result_balance_balance = result_balance["balance"];
               result_balance_username = result_balance["username"].as<String>(); // Assign as String
               total_miner++;
-
-      
-  //    for (JsonObject result_miner : result["miners"].as<JsonArray>()) {
-  //      result_balance_balance = result_balance["balance"];
-  //      result_balance_username = result_balance["username"];
-  //      total_miner++;
       }
       #if defined(SERIAL_PRINTING)
         Serial.println();
