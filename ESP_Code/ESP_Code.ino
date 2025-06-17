@@ -47,10 +47,11 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <ezTime.h>
 #include "MiningJob.h"
 #include "Settings.h"
 
+Timezone tz;
 
 //-----------------------------used for the balance display interval-------------------//
 boolean runEvery(unsigned long interval) {
@@ -600,23 +601,46 @@ void initSNTP() {
   esp_sntp_setoperatingmode(ESP_SNTP_OPMODE_POLL);
   esp_sntp_setservername(0, "pool.ntp.org");
   esp_sntp_init();
-  setTimezone();
+  setTimezoneByIP();
 }
 
-void setTimezone() {  
-  setenv("TZ", "CET-1CEST,M3.5.0,M10.5.0/3", 1); // Paris TZ, get your TZ at https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv
-  tzset();
+void setTimezoneByIP() {
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    http.begin("http://ip-api.com/json/");
+    int httpCode = http.GET();
+
+    if (httpCode == 200) {
+      String payload = http.getString();
+
+      StaticJsonDocument<512> doc;
+      DeserializationError error = deserializeJson(doc, payload);
+
+      if (!error) {
+        const char *timezone = doc["timezone"];
+        tz.setLocation(timezone);
+        waitForSync();
+      } else {
+        Serial.print(F("deserializeJson() failed: "));
+        Serial.println(error.c_str());
+      }
+    }
+
+    http.end();
+  }
 }
 
 void updateTimeDisplayData() {
-  struct tm timeinfo;
-  getLocalTime(&timeinfo);
+  time_t now = tz.now();
+  struct tm *tm = localtime(&now);
+                
   #if defined(SERIAL_PRINTING)
-    Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+    Serial.println(tm, "%A, %B %d %Y %H:%M:%S");
   #endif
-  strftime (mytime, sizeof (mytime), "%H:%M", &timeinfo);
-  strftime (mydate, sizeof (mydate),  "%d/%m/%Y", &timeinfo); //date in European format 
-  strftime (myday, sizeof (myday), "%A", &timeinfo);
+
+  strftime(mytime, sizeof(mytime), "%H:%M", tm);
+  strftime(mydate, sizeof(mydate), "%d/%m/%Y", tm);
+  strftime(myday, sizeof(myday), "%A", tm);
 }
 
 //---------------------------------------------------------------------------------------------------------
