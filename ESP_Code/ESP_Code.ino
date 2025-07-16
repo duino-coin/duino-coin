@@ -303,6 +303,7 @@ namespace {
 
     void SelectNode() {
         String input = "";
+        String inputTemp = "";
         int waitTime = 1;
         int poolIndex = 0;
 
@@ -312,13 +313,28 @@ namespace {
             #endif
             delay(waitTime * 1000);
             
-            input = httpGetString("https://server.duinocoin.com/getPool");
+            inputTemp = httpGetString("https://server.duinocoin.com/getPool");
             
-            // Increase wait time till a maximum of 32 seconds
-            // (addresses: Limit connection requests on failure in ESP boards #1041)
-            waitTime *= 2;
-            if (waitTime > 32) 
-                RestartESP("Node fetch unavailable");
+            if(inputTemp != ""){
+              input = inputTemp;
+              break;
+            }else{
+
+              // Increase wait time till a maximum of 32 seconds
+              // (addresses: Limit connection requests on failure in ESP boards #1041)
+              waitTime *= 2;
+              if (waitTime > 32){
+                #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_2432S08)
+                  input = inputTemp;
+                #else
+                  RestartESP("Node fetch unavailable");
+                #endif
+              }
+
+              #if defined(DISPLAY_SSD1306) || defined(DISPLAY_16X2) || defined(DISPLAY_2432S08)
+                if(input == "") display_info("Node fetch unavailable, trying again");
+              #endif
+            }
         }
 
         UpdateHostPort(input);
@@ -595,13 +611,15 @@ void notify(struct timeval* t) {
   #endif
 }
 
-void initSNTP() {  
-  sntp_set_sync_interval(4 * 60 * 60 * 1000UL);  // 1 hour
-  sntp_set_time_sync_notification_cb(notify);
-  esp_sntp_setoperatingmode(ESP_SNTP_OPMODE_POLL);
-  esp_sntp_setservername(0, "pool.ntp.org");
-  esp_sntp_init();
-  setTimezoneByIP();
+void initSNTP() {
+  #if defined(DISPLAY_2432S08)
+    sntp_set_sync_interval(4 * 60 * 60 * 1000UL);  // 1 hour
+    sntp_set_time_sync_notification_cb(notify);
+    esp_sntp_setoperatingmode(ESP_SNTP_OPMODE_POLL);
+    esp_sntp_setservername(0, "pool.ntp.org");
+    esp_sntp_init();
+    setTimezoneByIP();
+  #endif  
 }
 
 void setTimezoneByIP() {
@@ -631,16 +649,19 @@ void setTimezoneByIP() {
 }
 
 void updateTimeDisplayData() {
-  time_t now = tz.now();
-  struct tm *tm = localtime(&now);
-                
-  #if defined(SERIAL_PRINTING)
-    Serial.println(tm, "%A, %B %d %Y %H:%M:%S");
-  #endif
+  if(runEvery(60000)){
 
-  strftime(mytime, sizeof(mytime), "%H:%M", tm);
-  strftime(mydate, sizeof(mydate), "%d/%m/%Y", tm);
-  strftime(myday, sizeof(myday), "%A", tm);
+    time_t now = tz.now();
+    struct tm *tm = localtime(&now);
+                  
+    #if defined(SERIAL_PRINTING)
+      Serial.println(tm, "%A, %B %d %Y %H:%M:%S");
+    #endif
+
+    strftime(mytime, sizeof(mytime), "%H:%M", tm);
+    strftime(mydate, sizeof(mydate), "%d/%m/%Y", tm);
+    strftime(myday, sizeof(myday), "%A", tm);
+  }
 }
 
 //---------------------------------------------------------------------------------------------------------
@@ -915,7 +936,7 @@ void loop() {
   if ((runEvery(run_in_ms)) || (first_start == true))
     {
    
-      String ducoReportJsonUrl = ("https://server.duinocoin.com/v2/users/" + String(configuration->DUCO_USER));
+      String ducoReportJsonUrl = ("https://server.duinocoin.com/balances/" + String(configuration->DUCO_USER));
       
       #if defined(SERIAL_PRINTING) 
         Serial.println("retrieving balance from the API...");
@@ -932,19 +953,14 @@ void loop() {
         Serial.print("deserializeJson() failed: ");
         Serial.println(error.c_str());
         return;
-        }
+      }
 
       JsonObject result = doc["result"];
-
-      JsonObject result_balance = result["balance"];
       
-      total_miner = 0;
+      total_miner = result["max_miners"];
+      result_balance_balance = result["balance"];
+      result_balance_username = result["username"].as<String>(); // Assign as String
       
-      for (JsonObject result_miner : result["miners"].as<JsonArray>()) {
-              result_balance_balance = result_balance["balance"];
-              result_balance_username = result_balance["username"].as<String>(); // Assign as String
-              total_miner++;
-      }
       #if defined(SERIAL_PRINTING)
         Serial.println();
         Serial.println("Username : " + String(result_balance_username));   
