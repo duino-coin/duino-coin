@@ -51,10 +51,12 @@
 #include "MiningJob.h"
 #include "Settings.h"
 
+Timezone tz;
+unsigned long previousUpdateTime = 0;
+unsigned long previousUpdateBalance = 0;
 
 //-----------------------------used for the balance display interval-------------------//
-boolean runEvery(unsigned long interval) {
-  static unsigned long previousMillis = 0;
+boolean runEvery(unsigned long interval, unsigned long &previousMillis) {
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
@@ -565,7 +567,7 @@ void task1_func(void *) {
       VOID LOOP() {
         job[0]->mine();
 
-        showMiningStatsOnDisplay();
+        updateTimeDisplayData();
       }
     #endif
 }
@@ -578,9 +580,7 @@ void task2_func(void *) {
 
       VOID LOOP() {
         job[1]->mine();
-
-        updateTimeDisplayData();
-
+        
         showMiningStatsOnDisplay();
       }
     #endif
@@ -608,15 +608,67 @@ void setTimezone() {
   tzset();
 }
 
-void updateTimeDisplayData() {
-  struct tm timeinfo;
-  getLocalTime(&timeinfo);
-  #if defined(SERIAL_PRINTING)
-    Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+void getBalanceAndNumberMiners(){
+
+  // displaying user balance and number of miners, update every 300 s (can be changed in Settings.h)
+  #if defined(DISPLAY_2432S08)
+
+    if (first_start == true || runEvery(run_in_ms, previousUpdateBalance)){
+
+        first_start = false;
+
+        char ducoReportJsonUrl[128];
+        snprintf(ducoReportJsonUrl, sizeof(ducoReportJsonUrl), "https://server.duinocoin.com/balances/%s", configuration->DUCO_USER);
+        
+        #if defined(SERIAL_PRINTING) 
+          Serial.println("retrieving balance from the API...");
+          Serial.println(String(ducoReportJsonUrl));
+        #endif
+
+        String input2 = httpGetString(String(ducoReportJsonUrl));
+        StaticJsonDocument<512> doc;
+        DeserializationError error = deserializeJson(doc, input2);
+
+        if (error) {
+          Serial.print("deserializeJson() failed: ");
+          Serial.println(error.c_str());
+          display_info(error.c_str());
+          return;
+        }
+
+        JsonObject result = doc["result"];
+        
+        total_miner = result["max_miners"];
+        result_balance_balance = result["balance"];
+        result_balance_username = result["username"].as<String>(); // Assign as String
+        
+        #if defined(SERIAL_PRINTING)
+          Serial.println();
+          Serial.println("Username : " + String(result_balance_username));   
+          Serial.println("Balance : " + String(result_balance_balance) + " DUCO");  
+          Serial.println("Total miners : " + String(total_miner)); 
+        #endif
+      }
+    
   #endif
-  strftime (mytime, sizeof (mytime), "%H:%M", &timeinfo);
-  strftime (mydate, sizeof (mydate),  "%d/%m/%Y", &timeinfo); //date in European format 
-  strftime (myday, sizeof (myday), "%A", &timeinfo);
+}
+
+void updateTimeDisplayData() {
+  if(runEvery(60000, previousUpdateTime)){
+
+    time_t now = tz.now();
+    struct tm *tm = localtime(&now);
+                  
+    #if defined(SERIAL_PRINTING)
+      Serial.println(tm, "%A, %B %d %Y %H:%M:%S");
+    #endif
+
+    strftime(mytime, sizeof(mytime), "%H:%M", tm);
+    strftime(mydate, sizeof(mydate), "%d/%m/%Y", tm);
+    strftime(myday, sizeof(myday), "%A", tm);
+  }
+
+  getBalanceAndNumberMiners();
 }
 
 //---------------------------------------------------------------------------------------------------------
@@ -838,7 +890,7 @@ void setup() {
       mutexClientData = xSemaphoreCreateMutex();
       mutexConnectToServer = xSemaphoreCreateMutex();
 
-      xTaskCreatePinnedToCore(system_events_func, "system_events_func", 10000, NULL, 1, NULL, 0);
+      xTaskCreatePinnedToCore(system_events_func, "system_events_func", 10000, NULL, 0, NULL, 0);
       xTaskCreatePinnedToCore(task1_func, "task1_func", 10000, NULL, 1, &Task1, 0);
       xTaskCreatePinnedToCore(task2_func, "task2_func", 10000, NULL, 1, &Task2, 1);
     #endif
@@ -883,51 +935,4 @@ void loop() {
     single_core_loop();
   #endif
   delay(10);
-
-  // displaying user balance and number of miners, update every 300 s (can be changed in Settings.h)
-
-#if defined(DISPLAY_2432S08)
-
-  if ((runEvery(run_in_ms)) || (first_start == true))
-    {
-   
-      String ducoReportJsonUrl = ("https://server.duinocoin.com/v2/users/" + String(configuration->DUCO_USER));
-      
-      #if defined(SERIAL_PRINTING) 
-        Serial.println("retrieving balance from the API...");
-        Serial.println(String(ducoReportJsonUrl));
-        Serial.println();
-      #endif
-      
-      first_start = false;
-      String input2 = httpGetString(ducoReportJsonUrl);
-      DynamicJsonDocument doc (30000);
-      DeserializationError error = deserializeJson(doc, input2);
-
-      if (error) {
-        Serial.print("deserializeJson() failed: ");
-        Serial.println(error.c_str());
-        return;
-        }
-
-      JsonObject result = doc["result"];
-
-      JsonObject result_balance = result["balance"];
-      
-      total_miner = 0;
-      
-      for (JsonObject result_miner : result["miners"].as<JsonArray>()) {
-              result_balance_balance = result_balance["balance"];
-              result_balance_username = result_balance["username"].as<String>(); // Assign as String
-              total_miner++;
-      }
-      #if defined(SERIAL_PRINTING)
-        Serial.println();
-        Serial.println("Username : " + String(result_balance_username));   
-        Serial.println("Balance : " + String(result_balance_balance) + " DUCO");  
-        Serial.println("Total miners : " + String(total_miner)); 
-      #endif
-    }
-    
-  #endif
 }
