@@ -206,6 +206,7 @@ Please note the DUCO/day column has been removed since version 4.0 changed the r
   *   [d-cpuminer](https://github.com/phantom32-0/d-cpuminer) - pure C miner by phantom32 & revoxhere
   *   [Go Miner](https://github.com/yippiez/go-miner) by yippiez
   *   [ducominer](https://github.com/its5Q/ducominer) by its5Q
+  *   [nxducominer](https://github.com/tbwcjw/nxducominer/) - Miner for the Nintendo Switch by tbwcjw
   *   [Unofficial miners directory](https://github.com/revoxhere/duino-coin/tree/master/Unofficial%20miners)
       *   [Julia Miner](https://github.com/revoxhere/duino-coin/blob/master/Unofficial%20miners/Julia_Miner.jl) by revoxhere
       *   [Ruby Miner](https://github.com/revoxhere/duino-coin/blob/master/Unofficial%20miners/Ruby_Miner.rb) by revoxhere
