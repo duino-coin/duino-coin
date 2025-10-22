@@ -520,8 +520,8 @@
         "mining_not_exist_warning": " Убедитесь в том, что вы правильно ввели имя пользователя. Пожалуйста, проверьте ваш файл настроек. Пробуем еще раз через 10с",
         "load_config_error": " Ошибка загрузки файла настроек (",
         "load_config_error_warning": "/Miner_config.cfg). Попробуйте удалить его и перезапустить настройку. Выход через 10с",
-        "new_version": "A new version is available, you want to update miner [Y/n] ? ",
-        "updating": "The miner is outdated. Updating...."
+        "new_version": "Доступна новая версия, хотите обновить майнер [Y/n] ? ",
+        "updating": "Майнер устарел. Обновляю...."
     },
     "spanish": {
         "translation_autor": "HGEpro",
