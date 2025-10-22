@@ -113,7 +113,6 @@ py -m pip install -r requirements.txt
 *   [ESPython DUCO Miner](https://github.com/fabiopolancoe/ESPython-DUCO-Miner) - MicroPython майнер для плат ESP от fabiopolancoe
 *   [DUCO Miner for Nintendo 3DS](https://github.com/BunkerInnovations/duco-3ds) - Python майнер для Nintendo 3DS от PhereloHD & HGEpro
 *   [Dockerized DUCO Miner](https://github.com/Alicia426/Dockerized_DUCO_Miner_minimal) - Майнер в докере от Alicia426
-*   [nonceMiner](https://github.com/colonelwatch/nonceMiner) - Самый быстрый из доступных майнер от colonelwatch
 *   [NodeJS-DuinoCoin-Miner](https://github.com/DarkThinking/NodeJS-DuinoCoin-Miner/) - Простой майнер NodeJS от DarkThinking
 *   [d-cpuminer](https://github.com/phantom32-0/d-cpuminer) - Майнер на чистом C от phantom32 & revox
 *   [Go Miner](https://github.com/yippiez/go-miner) От yippiez

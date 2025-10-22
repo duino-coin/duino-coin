@@ -92,7 +92,6 @@ Bunu yaptıktan sonra istediğiniz yazılımı çalıştırabilirsiniz (istediğ
   *   [ESPython DUCO Miner](https://github.com/fabiopolancoe/ESPython-DUCO-Miner) - fabiopolancoe tarafından ESP kartları için MicroPython'da yazılmmış madenci
   *   [DUCO Miner for Nintendo 3DS](https://github.com/BunkerInnovations/duco-3ds) - PhereloHD & HGEpro tarafından Nintendo 3DS için madenci yazılımı
   *   [Dockerized DUCO Miner](https://github.com/Alicia426/Dockerized_DUCO_Miner_minimal) - Alicia426 tarafından Docker içinde çalışan madenci
-  *   [nonceMiner](https://github.com/colonelwatch/nonceMiner) - colonelwatch tarafından şu ana kadar ki en hızlı madenci yazılımı
   *   [NodeJS-DuinoCoin-Miner](https://github.com/DarkThinking/NodeJS-DuinoCoin-Miner/) - DarkThinking tarafından basit bir NodeJS'de yazılmış madenci
   *   [d-cpuminer](https://github.com/phantom32-0/d-cpuminer) - phantom32 & revoxhere tarafından saf C içinde yazılmış madenci
   *   [Go Miner](https://github.com/yippiez/go-miner) yippiez tarafından Go'da yazılmış madenci

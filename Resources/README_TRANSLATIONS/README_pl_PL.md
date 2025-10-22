@@ -113,7 +113,6 @@ Pakiet Duino-Coin dla AUR jest utrzymywany przez by [PhereloHD](https://github.c
 *   [ESPython DUCO Miner](https://github.com/fabiopolancoe/ESPython-DUCO-Miner) by fabiopolancoe
 *   [DUCO Miner for Nintendo 3DS](https://github.com/BunkerInnovations/duco-3ds) by PhereloHD & HGEpro
 *   [Dockerized DUCO Miner](https://github.com/Alicia426/Dockerized_DUCO_Miner_minimal) by Alicia426
-*   [nonceMiner](https://github.com/colonelwatch/nonceMiner) by colonelwatch
 *   [NodeJS-DuinoCoin-Miner](https://github.com/DarkThinking/NodeJS-DuinoCoin-Miner/) by DarkThinking
 *   [d-cpuminer](https://github.com/phantom32-0/d-cpuminer) by phantom32
 *   [Go Miner](https://github.com/yippiez/go-miner) by yippiez

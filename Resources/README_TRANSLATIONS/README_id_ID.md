@@ -114,7 +114,6 @@ Setelah melakukan ini, Anda dapat meluncurkan perangkat lunak (cukup klik dua ka
   *   [ESPython DUCO Miner](https://github.com/fabiopolancoe/ESPython-DUCO-Miner) - Penambang MicroPython untuk papan modul ESP oleh fabiopolancoe
   *   [DUCO Miner for Nintendo 3DS](https://github.com/BunkerInnovations/duco-3ds) - Python miner for Nintendo 3DS by PhereloHD & HGEpro
   *   [Dockerized DUCO Miner](https://github.com/Alicia426/Dockerized_DUCO_Miner_minimal) - Penambang di Docker oleh Alicia426
-  *   [nonceMiner](https://github.com/colonelwatch/nonceMiner) - Fastest Duino-Coin miner available by colonelwatch
   *   [NodeJS-DuinoCoin-Miner](https://github.com/DarkThinking/NodeJS-DuinoCoin-Miner/) - simple NodeJS miner by DarkThinking
   *   [d-cpuminer](https://github.com/phantom32-0/d-cpuminer) - miner C murni oleh phantom32 & revoxhere
   *   [Go Miner](https://github.com/yippiez/go-miner) by yippiez
