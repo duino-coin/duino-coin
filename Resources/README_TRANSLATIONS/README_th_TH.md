@@ -109,7 +109,6 @@ python3 -m pip install -r requirements.txt # Install pip dependencies
   *   [ESPython DUCO Miner](https://github.com/fabiopolancoe/ESPython-DUCO-Miner) - ตัวขุดไมโครไพธอนสำหรับบอร์ด ESP โดย fabiopolancoe
   *   [DUCO Miner for Nintendo 3DS](https://github.com/BunkerInnovations/duco-3ds) - ตัวขุดไพธอนสำหรับ Nintendo 3DS โดย PhereloHD & HGEpro
   *   [Dockerized DUCO Miner](https://github.com/Alicia426/Dockerized_DUCO_Miner_minimal) - ตัวขุดใน Docker โดย Alicia426
-  *   [nonceMiner](https://github.com/colonelwatch/nonceMiner) - ตัวขุด Duino-Coin อย่างเร็ว โดย colonelwatch
   *   [NodeJS-DuinoCoin-Miner](https://github.com/DarkThinking/NodeJS-DuinoCoin-Miner/) - ตัวขุด NodeJS อย่างง่าย โดย DarkThinking
   *   [d-cpuminer](https://github.com/phantom32-0/d-cpuminer) - ตัวขุด pure C โดย phantom32 & revoxhere
   *   [Go Miner](https://github.com/yippiez/go-miner) โดย yippiez

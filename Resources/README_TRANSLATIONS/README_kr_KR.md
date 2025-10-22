@@ -173,7 +173,6 @@ Duino-Coin 프로젝트에 대한 기여해 주시면 감사하겠습니다.
   *   [ESPython DUCO Miner](https://github.com/fabiopolancoe/ESPython-DUCO-Miner) - ESP 보드용 MicroPython 채굴기 by fabiopolancoe
   *   [DUCO Miner for Nintendo 3DS](https://github.com/BunkerInnovations/duco-3ds) - Nintendo 3DS용 Python 채굴기 PhereloHD & HGEpro
   *   [Dockerized DUCO Miner](https://github.com/Alicia426/Dockerized_DUCO_Miner_minimal) - Docker 이용한 채굴기 by Alicia426
-  *   [nonceMiner](https://github.com/colonelwatch/nonceMiner) - 가장 빠른 Duino-Coin 채굴기 by colonelwatch
   *   [NodeJS-DuinoCoin-Miner](https://github.com/DarkThinking/NodeJS-DuinoCoin-Miner/) - 간단한 NodeJS 채굴기 by DarkThinking
   *   [d-cpuminer](https://github.com/phantom32-0/d-cpuminer) - 퓨어 C 채굴기 by phantom32 & revoxhere
   *   [Go Miner](https://github.com/yippiez/go-miner) by yippiez

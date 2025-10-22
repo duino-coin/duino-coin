@@ -165,7 +165,6 @@ O código-fonte do servidor, a documentação para chamadas de API e bibliotecas
   *   [ESPython DUCO Miner](https://github.com/fabiopolancoe/ESPython-DUCO-Miner) - Minerador em MicroPython para placas ESP, feito por fabiopolancoe
   *   [DUCO Miner for Nintendo 3DS](https://github.com/BunkerInnovations/duco-3ds) - Minerador em Python para Nintendo 3DS, feito por PhereloHD & HGEpro
   *   [Dockerized DUCO Miner](https://github.com/Alicia426/Dockerized_DUCO_Miner_minimal) - Mineradora em Docker, feito por Alicia426
-  *   [nonceMiner](https://github.com/colonelwatch/nonceMiner) - A mineradora de Duino-Coin mais rápida disponível, feita por colonelwatch
   *   [NodeJS-DuinoCoin-Miner](https://github.com/DarkThinking/NodeJS-DuinoCoin-Miner/) - Minerador simples em NodeJS, feita pelo DarkThinking
   *   [d-cpuminer](https://github.com/phantom32-0/d-cpuminer) - Mineradora em C, feito por phantom32 & revoxhere
   *   [Go Miner](https://github.com/yippiez/go-miner) por yippiez
