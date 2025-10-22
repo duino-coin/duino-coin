@@ -232,6 +232,7 @@ Please note the DUCO/day column has been removed since version 4.0 changed the r
   *   [Home Assistant sensors package](https://github.com/mavotronik/Duinocoin_homeassistant) by mavotronik
   *   [ESPGUITOOL](https://github.com/CGameDev/ESPGUITOOL) by kazutokirigaya
   *   [DUCO Hashrate Monitor](https://gitlab.com/IT-Berater/twhashrate) hashrate java swing speedometer gui by IT-Berater
+  *   [DUCO Wallet ESP32 Ticker](https://gitlab.com/IT-Berater/twesp32/-/blob/main/README-DUINO.md) Displaying Duino-Coin Wallet Status on an OLED Display with ESP32 by IT-Berater
 
  You may also view a similar list on the [website](https://duinocoin.com/apps).
 
