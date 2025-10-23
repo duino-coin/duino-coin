@@ -272,8 +272,8 @@
                                 <i class="fa fa-fw fa-at"></i>
                                 Our e-mail address:
                                 <strong>
-                                    <a href="mailto:duino.coin@gmail.com">
-                                        duino.coin@gmail.com
+                                    <a href="mailto:support@duinocoin.com">
+                                        support@duinocoin.com
                                     </a>
                                 </strong>
                             </p>
@@ -458,8 +458,7 @@ function send() {
     message = document.getElementById("message").value
     email = document.getElementById("email").value
     username = document.getElementById("username").value
-
-    fetch(`https://server.duinocoin.com/contact_form?captcha=${captcha}&message=${message}&email=${email}&username=${username}`)
+    fetch(`https://admin.duinocoin.com/contact_form?captcha=${captcha}&message=${message}&email=${email}&username=${username}`)
         .then((response) => response.json())
         .then((data) => {
             if (data.success) {
