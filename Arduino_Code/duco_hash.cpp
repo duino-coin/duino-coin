@@ -23,10 +23,10 @@ void duco_hash_block(duco_hash_state_t * hasher) {
 
 	for (uint8_t i = 10; i < 80; i++) {
 		if (i >= 16) {
-			w[i & 15] = sha1_rotl(1, w[(i-3) & 15] ^ w[(i-8) & 15] ^ w[(i-14) & 15] ^ w[(i-16) & 15]);
+			w[i & 15] = sha1_rotl(1,w[(i-3) & 15] ^ w[(i-8) & 15] ^ w[(i-14) & 15] ^ w[(i-16) & 15]);
 		}
 
-		uint32_t temp = sha1_rotl(5, a) + e + w[i & 15];
+		uint32_t temp = sha1_rotl5(a) + e + w[i & 15];
 		if (i < 20) {
 			temp += (b & c) | ((~b) & d);
 			temp += 0x5a827999;
@@ -43,7 +43,7 @@ void duco_hash_block(duco_hash_state_t * hasher) {
 
 		e = d;
 		d = c;
-		c = sha1_rotl(30, b);
+		c = sha1_rotl30(b);
 		b = a;
 		a = temp;
 	}
@@ -105,13 +105,13 @@ void duco_hash_init(duco_hash_state_t * hasher, char const * prevHash) {
 	}
 
 	for (uint8_t i = 0; i < 10; i++) {
-		uint32_t temp = sha1_rotl(5, a) + e + w[i & 15];
+		uint32_t temp = sha1_rotl5(a) + e + w[i & 15];
 		temp += (b & c) | ((~b) & d);
 		temp += 0x5a827999;
 
 		e = d;
 		d = c;
-		c = sha1_rotl(30, b);
+		c = sha1_rotl30(b);
 		b = a;
 		a = temp;
 	}
