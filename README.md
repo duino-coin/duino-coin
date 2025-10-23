@@ -184,7 +184,7 @@ Please note the DUCO/day column has been removed since version 4.0 changed the r
 
 ## Community-made softwares
 
-### Please note that these softwares are not developed by us and we do not give any guarantees that use of them will not result in an account getting banned if they get changed in the future.
+### Please note that these softwares are not developed by us and we do not guarantee them working properly. Additionally note that using outdated and/or unofficial miners may produce warnings or a ban.
 
   ### Miners made by the Duino-Coin community:
   *   [Dockerized Duino-Coin Miner](https://github.com/simeononsecurity/docker-duino-coin) - A Dockerized version of the Duino-Coin Miner by simeononsecurity
