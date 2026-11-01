@@ -33,7 +33,7 @@
 #endif
 
 #ifndef DUCO_ESP32_HW_SHA1_TARGET_HPS
-    // Public daily-use target per existing ESP32 worker. Two workers target ~220 kH/s total.
+    // Default hardware SHA-1 target per ESP32 worker.
     #define DUCO_ESP32_HW_SHA1_TARGET_HPS 110000UL
 #endif
 
@@ -258,9 +258,8 @@ private:
             #endif
         #endif
 
-        // The original ESP32 has one SHA accelerator shared by both CPU cores.
-        // Serialize only the raw search; release it before rate pacing/network I/O
-        // so the second official mining worker can use the engine immediately.
+        // The original ESP32 shares one SHA accelerator between both CPU cores.
+        // Hold it only for the search; release it before pacing and network I/O.
         HardwareSHA1::lock();
         for (Counter<10> counter; counter < job_limit; ++counter) {
             ++attempts;
@@ -275,9 +274,8 @@ private:
 
         if (!hit) return;
 
-        // Pace each existing ESP32 worker to the public daily-use target. Waiting
-        // time is included in reported hashrate, so the submitted figure reflects
-        // actual worker throughput rather than the accelerator's short burst rate.
+        // Include pacing time in the submitted hashrate so it reflects
+        // effective worker throughput rather than raw accelerator speed.
         const uint64_t target_us =
             (uint64_t(attempts) * 1000000ULL + DUCO_ESP32_HW_SHA1_TARGET_HPS - 1ULL)
             / DUCO_ESP32_HW_SHA1_TARGET_HPS;

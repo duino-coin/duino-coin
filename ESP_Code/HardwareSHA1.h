@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Conservative classic ESP32 hardware SHA-1 helper for Duino-Coin.
+// Classic ESP32 hardware SHA-1 helper for Duino-Coin.
 
 #pragma once
 #include <Arduino.h>
@@ -15,9 +15,8 @@
 
 class HardwareSHA1 {
 public:
-    // Intentionally not IRAM_ATTR on Arduino-ESP32 3.x / GCC 13.
-    // Forcing this literal-heavy helper into IRAM can trigger Xtensa
-    // 'dangerous relocation: l32r: literal placed after use' link errors.
+    // Keep out of IRAM: Arduino-ESP32 3.x/GCC 13 can produce
+    // Xtensa l32r relocation errors for this helper.
     static inline void waitIdle() {
         while (DPORT_REG_READ(SHA_1_BUSY_REG)) {}
     }
@@ -47,8 +46,8 @@ public:
         for (int i = 0; i < 5; ++i) out[i] = pack4(expected + i * 4);
     }
 
-    // Hash exactly: 40-byte prefix + decimal nonce. This always fits in one SHA1 block.
-    // Returns true only on exact 160-bit match.
+    // SHA1(40-byte prefix + decimal nonce). Fits in one SHA-1 block.
+    // Returns true only on a full 160-bit match.
     static inline bool hash40Locked(
         const uint32_t prefix[10], const char* nonce, uint8_t nonceLen,
         const uint32_t expected[5]
@@ -56,12 +55,11 @@ public:
         volatile uint32_t* const sha =
             reinterpret_cast<volatile uint32_t*>(SHA_TEXT_BASE);
 
-        // SHA_LOAD overwrites words 0..4 with the digest, so these are always restored.
+        // SHA_LOAD overwrites words 0..4 with the digest; restore them for each candidate.
         sha[0] = prefix[0]; sha[1] = prefix[1]; sha[2] = prefix[2];
         sha[3] = prefix[3]; sha[4] = prefix[4];
 
-        // Words 5..9 normally survive LOAD, but writing them too makes the path robust
-        // across framework revisions. This can be trimmed after on-board benchmarking.
+        // Rewrite words 5..9 as well to keep the message state deterministic.
         sha[5] = prefix[5]; sha[6] = prefix[6]; sha[7] = prefix[7];
         sha[8] = prefix[8]; sha[9] = prefix[9];
 
