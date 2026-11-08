@@ -463,6 +463,9 @@ function send() {
         .then((data) => {
             if (data.success) {
                 alert("Your message has been submitted");
+                document.getElementById("message").value = ""
+                document.getElementById("email").value = ""
+                document.getElementById("username").value = ""
             } else {
                 alert(data.message);
             }
