@@ -2,14 +2,14 @@ name: Update Copyright Year
 
 on:
   schedule:
-    - cron: '01 0 1 1 *'  # January 1, 00:01 UTC
+    - cron: '17 0 1 1 *'  # January 1, 00:17 UTC
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  update-copyright:
+  gh-pages:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout gh-pages
@@ -35,19 +35,64 @@ jobs:
               path = Path(filename)
               if not path.is_file():
                   continue
-              content = path.read_text(encoding="utf-8")
+              content = path.read_bytes().decode("utf-8")
               updated = re.sub(pattern, lambda m: m.group(1) + year, content)
               if updated != content:
-                  path.write_text(updated, encoding="utf-8")
+                  path.write_bytes(updated.encode("utf-8"))
                   print(f"updated {filename}")
           PY
 
       - name: Commit changes
         run: |
-          if ! git diff --quiet -- LICENSE README.md; then
+          if ! git diff --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add LICENSE README.md
-            git commit -m "chore: Update copyright year (auto)"
+            git add -u
+            git commit -m "Update copyright year"
             git push origin HEAD:gh-pages
+          fi
+
+  master:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Update copyright years
+        run: |
+          python3 - <<'PY'
+          from datetime import datetime, timezone
+          from pathlib import Path
+          import re
+
+          year = str(datetime.now(timezone.utc).year)
+          pattern = re.compile(r'\b(2019-)20\d{2}\b')
+
+          files = [
+              "PC_Miner.py",
+              "AVR_Miner.py",
+              "Arduino_Code/Arduino_Code.ino",
+          ]
+
+          for filename in files:
+              path = Path(filename)
+              if not path.is_file():
+                  continue
+              content = path.read_bytes().decode("utf-8")
+              updated = pattern.sub(lambda m: m.group(1) + year, content)
+              if updated != content:
+                  path.write_bytes(updated.encode("utf-8"))
+                  print(f"updated {filename}")
+          PY
+
+      - name: Commit changes
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -u
+            git commit -m "Update copyright year"
+            git push origin HEAD:master
           fi
