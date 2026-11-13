@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Classic ESP32 hardware SHA-1 helper for Duino-Coin.
+// HashCore contribution: developed by GitHub user twitchraptorgaming91-blip.
+// Original contribution: https://github.com/duino-coin/duino-coin/pull/1920
+// Attribution notice; existing project licensing remains unchanged.
 
 #pragma once
 #include <Arduino.h>
