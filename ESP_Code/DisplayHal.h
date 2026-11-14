@@ -237,7 +237,8 @@
           u8g2.print(__DATE__);
           
           
-          u8g2.drawStr(2, 37, "Features:");
+          // HashCore attribution on the SSD1306 boot screen (no mining UI changes).
+          u8g2.drawStr(2, 37, "HashCore | Features:");
           u8g2.setCursor(2, 46);
           String features_str = "OTA ";
           #if defined(USE_LAN)
