@@ -237,7 +237,8 @@
           u8g2.print(__DATE__);
           
           
-          u8g2.drawStr(2, 37, "Features:");
+          // HashCore attribution on the SSD1306 boot screen (no mining UI changes).
+          u8g2.drawStr(2, 37, "HashCore | Features:");
           u8g2.setCursor(2, 46);
           String features_str = "OTA ";
           #if defined(USE_LAN)
@@ -489,7 +490,15 @@
           
           u8g2.setFont(u8g2_font_4x6_tr);
           u8g2.drawStr(14, 61, String(WiFi.localIP().toString()).c_str());
-          u8g2.drawStr(14, 55, ("Duino-Coin " + String(SOFTWARE_VERSION)).c_str());
+          #if defined(HASHCORE_OLED_BALANCE) && defined(ESP32) && !defined(CONFIG_FREERTOS_UNICORE)
+            // Wallet balance replaces only the tiny version footer; mining stats stay intact.
+            String balance_line = hashcore_wallet_balance_valid
+                ? "DUCO " + String(hashcore_wallet_balance, 2)
+                : "DUCO --";
+            u8g2.drawStr(14, 55, balance_line.c_str());
+          #else
+            u8g2.drawStr(14, 55, ("Duino-Coin " + String(SOFTWARE_VERSION)).c_str());
+          #endif
           u8g2.drawXBMP(2, 11, 9, 50, image_duco_logo_bits);
           u8g2.drawStr(111, 27, "diff");
           u8g2.drawStr(107, 38, "shr/s");
