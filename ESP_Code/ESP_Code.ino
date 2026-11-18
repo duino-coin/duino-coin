@@ -486,6 +486,48 @@ namespace {
 
 } // End of namespace
 
+#if defined(DISPLAY_SSD1306) && defined(HASHCORE_OLED_BALANCE) && defined(ESP32) && !defined(CONFIG_FREERTOS_UNICORE)
+// Public Duino-Coin balance API. No credentials are sent.
+// A low-priority task performs bounded HTTPS polling independently of the mining loop.
+volatile float hashcore_wallet_balance = 0.0f;
+volatile bool hashcore_wallet_balance_valid = false;
+static void hashcore_balance_task(void *) {
+  for (;;) {
+    if (WiFi.status() == WL_CONNECTED && configuration->DUCO_USER.length() > 0) {
+      WiFiClientSecure tls;
+      tls.setInsecure(); // Existing miner uses this TLS policy; consider CA verification later.
+      tls.setTimeout(2000);
+      HTTPClient http;
+      String url = "https://server.duinocoin.com/balances/" + configuration->DUCO_USER;
+      http.setTimeout(2000);
+      if (http.begin(tls, url)) {
+        if (http.GET() == HTTP_CODE_OK) {
+          DynamicJsonDocument doc(512);
+          if (deserializeJson(doc, http.getStream()) == DeserializationError::Ok &&
+              doc["success"] == true && doc["result"]["balance"].is<float>()) {
+            float amount = doc["result"]["balance"].as<float>();
+            if (isfinite(amount) && amount >= 0.0f) {
+              hashcore_wallet_balance = amount;
+              hashcore_wallet_balance_valid = true;
+            }
+          } else {
+            hashcore_wallet_balance_valid = false;
+          }
+        } else {
+          hashcore_wallet_balance_valid = false;
+        }
+        http.end();
+      } else {
+        hashcore_wallet_balance_valid = false;
+      }
+    } else {
+      hashcore_wallet_balance_valid = false;
+    }
+    vTaskDelay(pdMS_TO_TICKS(300000));
+  }
+}
+#endif
+
 MiningJob *job[CORE];
 
 #if CORE == 2
@@ -765,6 +807,9 @@ void setup() {
       mutexConnectToServer = xSemaphoreCreateMutex();
 
       xTaskCreatePinnedToCore(system_events_func, "system_events_func", 10000, NULL, 1, NULL, 0);
+      #if defined(DISPLAY_SSD1306) && defined(HASHCORE_OLED_BALANCE)
+        xTaskCreatePinnedToCore(hashcore_balance_task, "hc_balance", 8192, NULL, 1, NULL, 0);
+      #endif
       xTaskCreatePinnedToCore(task1_func, "task1_func", 10000, NULL, 1, &Task1, 0);
       xTaskCreatePinnedToCore(task2_func, "task2_func", 10000, NULL, 1, &Task2, 1);
     #endif

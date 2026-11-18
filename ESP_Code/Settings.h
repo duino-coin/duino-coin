@@ -54,6 +54,8 @@ extern const char PASSWORD[] = "PASSW0RD";
 // SCL - GPIO22 (ESP32) or GPIO5 (D2 on ESP8266) or GPIO35 (ESP32-S2)
 // SDA - GPIO21 (ESP32) or GPIO4 (D1 on ESP8266) or GPIO33 (ESP32-S2)
 // #define DISPLAY_SSD1306
+// Optional wallet balance on SSD1306; enable only with DISPLAY_SSD1306.
+// #define HASHCORE_OLED_BALANCE
 
 // Uncomment to enable a 16x2 LCD screen on a direct bus to display mining info in real time
 // See line 150 for connections and initializer
