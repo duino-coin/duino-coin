@@ -109,7 +109,6 @@ def now():
 def port_num(com):
     return str(''.join(filter(str.isdigit, com)))
 
-
 class Settings:
     VER = '4.3'
     SOC_TIMEOUT = 10
@@ -121,6 +120,8 @@ class Settings:
     ENCODING = "utf-8"
     TEMP_FOLDER = "Temp"
     disable_title = False
+
+    DUCOForge = f"AVR Miner, DUCOForge {VER} (community)"
 
     try:
         # Raspberry Pi latin users can't display this character
@@ -1119,7 +1120,7 @@ def mine_avr(com, threadid, fastest_pool, thread_rigid):
                             + Settings.SEPARATOR
                             + str(hashrate_t)
                             + Settings.SEPARATOR
-                            + f'DUCOForge {Settings.VER} (community)'
+                            + Settings.DUCOForge
                             + Settings.SEPARATOR
                             + str(thread_rigid)
                             + Settings.SEPARATOR
